@@ -1,0 +1,33 @@
+'''
+881-Boats to save people
+https://leetcode.com/problems/boats-to-save-people/description/
+T(n) = n*log(n)
+S(n) = n
+Notes: actually, the algorithm itself is T(n) = n, the major time and space cost happen at the sortting process
+'''
+
+
+class Solution(object):
+    def numRescueBoats(self, people, limit):
+        """
+        :type people: List[int]
+        :type limit: int
+        :rtype: int
+        """
+        people.sort()
+        Hp = len(people) - 1
+        Lp = 0
+        boat = 0
+        while Lp < Hp:
+            if people[Hp] + people[Lp] <= limit:
+                boat += 1
+                Hp -= 1
+                Lp += 1
+            else:
+                boat +=1
+                Hp -= 1
+        if Lp == Hp:
+            boat += 1
+        return boat 
+
+        
