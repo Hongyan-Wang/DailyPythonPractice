@@ -1,0 +1,28 @@
+'''
+003, 3. Longest Substring Without Repeating Characters
+T(n) = n
+S(n) = 1
+https://leetcode.com/problems/longest-substring-without-repeating-characters/description/
+'''
+class Solution(object):
+    def lengthOfLongestSubstring(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+        sl = len(s)
+        if sl <= 1:
+            return sl
+        else:
+            L = 0
+            R = 0
+            seencharacters = {}
+            max_len = 0
+            while L < sl and R < sl:
+                current = s[R] 
+                if current in seencharacters:
+                    L = max(seencharacters[s[R]]+1, L)
+                max_len = max(max_len, R-L+1)
+                seencharacters[current] = R 
+                R +=1
+            return max_len
