@@ -1,0 +1,34 @@
+# 278- First Bad Version
+# https://leetcode.com/problems/first-bad-version/description/
+
+
+# The isBadVersion API is already defined for you.
+# @param version, an integer
+# @return a bool
+# def isBadVersion(version):
+
+class Solution(object):
+    def firstBadVersion(self, n):
+        """
+        :type n: int
+        :rtype: int
+        """
+        if n == 1:
+            return 1
+        elif not isBadVersion(n-1):
+            return n
+        else:
+            L = 1
+            R = n-1
+            mid = int((L+R)/2)
+            while True:
+                if isBadVersion(mid) != isBadVersion(mid+1):
+                    return mid+1
+                elif isBadVersion(mid-1) != isBadVersion(mid):
+                    return mid
+                elif isBadVersion(mid):
+                    R = mid-1
+                    mid = int((L+R)/2)
+                else:
+                    L = mid+1
+                    mid = int((L+R)/2)
