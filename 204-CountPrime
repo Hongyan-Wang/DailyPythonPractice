@@ -1,0 +1,22 @@
+'''
+https://leetcode.com/problems/count-primes/description/
+'''
+
+class Solution(object):
+    def countPrimes(self, n):
+        """
+        :type n: int
+        :rtype: int
+        """
+        
+        if n<2:
+            return 0
+        isPrime = [True]*n
+        isPrime[0] = isPrime[1] = False
+        
+        for i in range(2, int(math.sqrt(n)+1)):
+            if isPrime[i]:
+                for multiples_of_i in range(i*i,n,i):
+                    isPrime[multiples_of_i] = False
+        
+        return sum(isPrime)
