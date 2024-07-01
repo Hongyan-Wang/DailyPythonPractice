@@ -1,0 +1,8 @@
+# 136 - Signgle Numer
+# https://leetcode.com/problems/single-number/description/
+# T(n) = n
+# S(n) = n
+
+class Solution:
+    def singleNumber(self, nums: List[int]) -> int:
+        return 2*sum(set(nums)) - sum(nums)
