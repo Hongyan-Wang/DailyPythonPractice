@@ -1,0 +1,25 @@
+# 1550. Three consecutive odds
+# https://leetcode.com/problems/three-consecutive-odds/
+# T(n) = n
+# S(n) = 1
+
+class Solution:
+    def threeConsecutiveOdds(self, arr: List[int]) -> bool:
+        def isOdd(num):
+            if num % 2 ==0:
+                return False
+            else:
+                return True
+        if len(arr) < 3:
+            return False
+        i = 0
+        while i < len(arr)-2:
+            if isOdd(arr[i]) and isOdd(arr[i+1]) and isOdd(arr[i+2]):
+                return True
+            elif isOdd(arr[i+1]) and isOdd(arr[i+2]):
+                i +=1
+            elif isOdd(arr[i+2]):
+                i +=2
+            else:
+                i +=3
+        return False
