@@ -1,0 +1,57 @@
+# 657. Robot Return to origin 
+# https://leetcode.com/problems/robot-return-to-origin/description/
+# T(n) = n
+# S(n) = 1
+
+# Solution 1, traverse the whole str list 
+class Solution:
+    def judgeCircle(self, moves: str) -> bool:
+        x = 0
+        y = 0
+        for move in moves:
+            if move == 'R':
+                x += 1
+            elif move == 'L':
+                x -= 1
+            elif move == 'U':
+                y += 1
+            else:
+                y -= 1
+        return x == 0 and y ==0
+
+# using str functions
+class Solution:
+    def judgeCircle(self, moves: str) -> bool:
+        c = 0
+        if not moves.count('R') == moves.count('L'):
+            c +=1
+        if not moves.count('U') == moves.count('D'):
+            c +=1 
+        return c==0 
+
+
+
+'''
+Intuitive solution: using an numpy array, convert this str into a 2d matrix
+T(n) = n
+S(n) = 2*n = n
+import numpy as np
+class Solution:
+    def judgeCircle(self, moves: str) -> bool:
+        output = np.array([[0, 0]]* len(moves))
+        for i in range(len(moves)):
+            move = moves[i]
+            if move == 'R':
+                output[i, 0] = 1
+            elif move == 'L':
+                output[i, 0] = -1
+            elif move == 'U':
+                output[i, 1] = 1
+            else:
+                output[i, 1] = -1
+        results = sum(output)
+        if results[0] == 0 and results[1] == 0:
+            return True
+        else:
+            return False 
+'''
