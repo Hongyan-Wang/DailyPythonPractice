@@ -1,5 +1,10 @@
 # 1530 - Number of good leaf nodes pairs
 # https://leetcode.com/problems/number-of-good-leaf-nodes-pairs/description/
+###### Key steps:
+###### 1. Identify the leaf nodes;  2. remember the distance between nodes to ancestors 
+###### Algorithims:
+###### 1. Postorder traversal; 2. Tracking the distance; 3. Combine the distance 
+
 
 # Definition for a binary tree node.
 # class TreeNode:
