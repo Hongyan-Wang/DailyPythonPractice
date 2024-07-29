@@ -1,0 +1,28 @@
+'''
+1395 - Count number of teams
+https://leetcode.com/problems/count-number-of-teams/description/
+T(n) = O(n^2)
+S(n) = 1
+'''
+
+class Solution:
+    def numTeams(self, rating: List[int]) -> int:
+        numTeams = 0
+        for i in range(1, len(rating)-1):
+            left_small = 0
+            left_big = 0
+            right_small = 0
+            right_big = 0
+            for j in range(i):
+                if rating[j] < rating[i]:
+                    left_small += 1
+                elif rating[j] > rating[i]:
+                    left_big +=1
+            for j in range(i+1, len(rating)):
+                if rating[j] < rating[i]:
+                    right_small += 1
+                elif rating[j] > rating[i]:
+                    right_big +=1
+            numTeams += left_small * right_big
+            numTeams += left_big * right_small
+        return numTeams
