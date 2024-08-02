@@ -1,0 +1,19 @@
+‘’‘
+https://leetcode.com/problems/minimum-swaps-to-group-all-1s-together-ii/description/
+T(N) = O(n)
+Note: Please note that sum(list) is actually n time complexity 
+’‘’
+
+
+class Solution:
+    def minSwaps(self, nums: List[int]) -> int:
+        k = sum(nums)
+        n = len(nums)
+        nums.extend(nums[0:k])
+        mx = sum(nums[0:k])
+        cnt = mx
+        for i in range(k, n+k):
+            cnt += nums[i % n]
+            cnt -= nums[(i-k+n)%n]
+            mx = max(mx, cnt)
+        return k-mx
