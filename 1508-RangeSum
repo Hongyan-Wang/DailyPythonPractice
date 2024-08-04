@@ -1,0 +1,19 @@
+'''
+https://leetcode.com/problems/range-sum-of-sorted-subarray-sums/description/
+Note: the output number is a big number of a mod 
+T(n) = O(n)
+'''
+
+import numpy as np
+class Solution:
+    def rangeSum(self, nums: List[int], n: int, left: int, right: int) -> int:
+        dp = np.array([[0]*n]*n)
+        dp[0] = nums
+        new_list = nums
+        for i in range(1, n):
+            for j in range(n-i):
+                dp[i][j]=dp[i-1][j] + dp[0][i+j]
+                new_list.append(dp[i][j])
+        new_list.sort()
+        modd = 10**9+7
+        return sum(new_list[left-1: right]) % modd
