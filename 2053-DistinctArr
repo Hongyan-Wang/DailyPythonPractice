@@ -1,0 +1,25 @@
+'''
+https://leetcode.com/problems/kth-distinct-string-in-an-array/description/
+Note: some elements may repeated twice or more, so there might be mistake if not considering that 
+
+T(n) = O(n) 
+S(n) = O(n)
+'''
+
+class Solution:
+    def kthDistinct(self, arr: List[str], k: int) -> str:
+        str_set = set()
+        str_repeat = set()
+        update_arr = []
+        for item in arr:
+            if item not in str_set:
+                str_set.add(item)
+            else:
+                str_repeat.add(item) # the repeated elements 
+        for item in arr:
+            if item not in str_repeat:
+                update_arr.append(item)
+        if (len(update_arr)) < k:
+            return ''
+        else:            
+            return update_arr[k-1]
