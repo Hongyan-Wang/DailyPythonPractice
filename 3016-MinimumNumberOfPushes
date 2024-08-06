@@ -1,0 +1,21 @@
+# 3016 - Minimum number of pushes to type world 
+# https://leetcode.com/problems/minimum-number-of-pushes-to-type-word-ii/description/
+# T(n) = O(nlog(n)) - mainly from the sort function 
+# Note: 
+#       The key is to use Counter function properly; sort function need to output a descending order; there are only 8 keys that allows characters 
+
+
+from collections import Counter
+class Solution:
+    def minimumPushes(self, word: str) -> int:
+        temp = list(Counter(word).values())
+        temp.sort(reverse = True)
+        if len(temp) <= 8:
+            total_num = sum(temp)
+        elif len(temp) <= 16:
+            total_num = sum(temp[0:8]) + 2*sum(temp[8::])
+        elif len(temp) <= 24:
+            total_num = sum(temp[0:8]) + 2*sum(temp[8:16]) + 3*sum(temp[16:24])
+        else:
+            total_num = sum(temp[0:8]) + 2*sum(temp[8:16]) + 3*sum(temp[16:24])+4*sum(temp[24::])
+        return total_num
