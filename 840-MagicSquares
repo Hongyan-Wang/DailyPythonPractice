@@ -1,6 +1,19 @@
 # 840- Magic Squares
 # https://leetcode.com/problems/magic-squares-in-grid/description/
-# 
+# T(n) = O(row * col)
+
+'''
+Note, the isMagic function can be simplified as below:
+def isMagic(grid9):
+            sum0 = grid9[0][0] + grid9[0][1] + grid9[0][2]
+            return (
+                sum0 == grid9[1][0] + grid9[1][1] + grid9[1][2] == grid9[2][0] + grid9[2][1] + grid9[2][2] and
+                sum0 == grid9[0][0] + grid9[1][0] + grid9[2][0] == grid9[0][1] + grid9[1][1] + grid9[2][1] == grid9[0][2] + grid9[1][2] + grid9[2][2] and
+                sum0 == grid9[0][0] + grid9[1][1] + grid9[2][2] == grid9[2][0] + grid9[1][1] + grid9[0][2] and
+                set([grid9[0][0], grid9[0][1], grid9[0][2], grid9[1][0], grid9[1][1], grid9[1][2], grid9[2][0], grid9[2][1], grid9[2][2]]) == {1, 2, 3, 4, 5, 6, 7, 8, 9}
+            )
+'''
+
 
 class Solution:
     def numMagicSquaresInside(self, grid: List[List[int]]) -> int:
