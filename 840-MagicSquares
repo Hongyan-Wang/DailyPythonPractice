@@ -1,0 +1,37 @@
+# 840- Magic Squares
+# https://leetcode.com/problems/magic-squares-in-grid/description/
+# 
+
+class Solution:
+    def numMagicSquaresInside(self, grid: List[List[int]]) -> int:
+        def isMagic(gird9):
+            sum0 = grid9[0][0] + grid9[0][1] + grid9[0][2]
+            sum00 = 0
+            dataset = set([1, 2, 3, 4, 5, 6, 7, 8, 9])
+            for i in range(3):
+                if (grid9[i][0] not in dataset) or (grid9[i][1] not in dataset) or (grid9[i][2] not in dataset):
+                    return False
+                sum00 += grid9[i][0]+grid9[i][1]+grid9[i][2]
+                if (grid9[i][0]+grid9[i][1]+grid9[i][2])!= sum0:
+                    return False
+                elif (grid9[0][i]+grid9[1][i]+grid9[2][i])!= sum0:
+                    return False
+            if sum00 != 45 or grid9[0][0] == grid9[0][1]:
+                return False
+            if (grid9[0][0]+grid9[1][1]+grid9[2][2])!= sum0:
+                return False
+            elif (grid9[2][0]+grid9[1][1]+grid9[0][2])!= sum0:
+                return False
+            else:
+                return True
+        row = len(grid)
+        col = len(grid[0])
+        if row <3 or col < 3:
+            return 0
+        NumMagic = 0
+        for i in range(row-2):
+            for j in range(col-2):
+                grid9 = [grid[i][j:j+3], grid[i+1][j:j+3], grid[i+2][j:j+3]]
+                if isMagic(grid9):
+                    NumMagic +=1
+        return NumMagic
