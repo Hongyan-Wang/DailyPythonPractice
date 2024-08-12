@@ -1,0 +1,21 @@
+# 703 - Kth largest element in a stream 
+# https://leetcode.com/problems/kth-largest-element-in-a-stream/description/
+# apprently, the more time effective method is to use a heap. to check later 
+
+class KthLargest:
+
+    def __init__(self, k: int, nums: List[int]):
+        self.stream = nums
+        self.pos = k-1
+
+    def add(self, val: int) -> int:
+        nums = self.stream
+        nums.append(val)
+        nums.sort(reverse = True)
+        self.stream = nums
+        return nums[self.pos] 
+
+
+# Your KthLargest object will be instantiated and called as such:
+#obj = KthLargest(3, [4,5,8,2])
+#param_1 = obj.add(6)
