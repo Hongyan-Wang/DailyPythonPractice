@@ -1,0 +1,24 @@
+# https://leetcode.com/problems/lemonade-change/description/
+
+class Solution:
+    def lemonadeChange(self, bills: List[int]) -> bool:
+        bill5 = 0
+        bill10 = 0
+        for bill in bills:
+            if bill == 10 and bill5 <1:
+                return False
+            elif bill ==20 and not ((bill5 >=3) or (bill5>=1 and bill10 >=1)):
+                return False
+            elif bill == 5:
+                bill5 +=1
+            elif bill == 10:
+                bill10 +=1
+                bill5 -=1
+            elif bill ==20:
+                if bill10 >=1:
+                    bill10 -= 1
+                    bill5 -=1
+                else:
+                    bill5 -=3
+        return True
+        
