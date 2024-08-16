@@ -1,0 +1,27 @@
+# The key for this piece of code it to find out the first/second max/min number 
+# While remembering their respective indices
+# https://leetcode.com/problems/maximum-distance-in-arrays/description/
+
+
+class Solution:
+    def maxDistance(self, arrays: List[List[int]]) -> int:
+        max1, max2 = -100000, -100000
+        max_idx1, max_idx2 = 0, 0
+        min1, min2 = 100000, 100000
+        min_idx1, min_idx2 = 0, 0
+        for i in range(len(arrays)):
+            if arrays[i][-1] > max1:
+                max_idx2, max2 = max_idx1, max1
+                max_idx1, max1 = i, arrays[i][-1]
+            elif arrays[i][-1] > max2:
+                max_idx2, max2 = i, arrays[i][-1]
+
+            if arrays[i][0] < min1:
+                min_idx2, min2 = min_idx1, min1
+                min_idx1, min1 = i, arrays[i][0]
+            elif arrays[i][0] < min2:
+                min_idx2, min2 = i, arrays[i][0]
+        if max_idx1 != min_idx1:
+            return abs(max1 - min1)
+        else:
+            return max(abs(max2-min1), abs(max1-min2))              
