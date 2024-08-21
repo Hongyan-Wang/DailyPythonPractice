@@ -1,6 +1,6 @@
 # To recheck, it is a dynamic programming problem
 # https://leetcode.com/problems/strange-printer/description/
-
+# Key Optimization: If s[k] == s[j], then the last operation to print s[k+1:j] can be merged with the printing of s[i:k], thus saving one operation.
 class Solution:
     def strangePrinter(self, s: str) -> int:
         n = len(s)
