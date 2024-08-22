@@ -1,0 +1,24 @@
+
+'''
+https://leetcode.com/problems/number-complement/description/
+476 - Number Complement 
+The complement of an integer is the integer you get when you flip all the 0's to 1's and all the 1's to 0's in its binary representation.
+
+For example, The integer 5 is "101" in binary and its complement is "010" which is the integer 2.
+Given an integer num, return its complement.
+
+'''
+import math
+class Solution:
+    def findComplement(self, num: int) -> int:
+        log2val = math.floor(math.log2(num)) + 1     
+        sum0 = 0
+        for k in range(log2val):
+            sum0 += math.pow(2, k)
+        return int(sum0)-num
+
+
+''''
+        log2val = math.floor(math.log2(num)) + 1     
+        return int(math.pow(2, log2val)-1)-num
+'''
