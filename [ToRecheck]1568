@@ -1,5 +1,6 @@
 ##https://leetcode.com/problems/minimum-number-of-days-to-disconnect-island/description/
 # checked in 2024/08
+# Comments added and revisited 
 class Solution:
     def minDays(self, grid: List[List[int]]) -> int:
         def count_islands():
