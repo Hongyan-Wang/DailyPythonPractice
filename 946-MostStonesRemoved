@@ -1,0 +1,41 @@
+‘’‘
+947-Most Stones Removed with same row or column
+Hint:
+  * Connect nodes if they share the same row or column. This forms a graph where each connected component represents stones that can be removed sequentially, leaving only one stone in that component.
+  * The maximum number of stones you can remove is equal to the total number of stones minus the number of connected components.
+  * This is because within each connected component, you can remove all but one stone.
+T(n) = O(n)
+S(n) = O(n)
+
+’‘’
+
+class Solution:
+    def removeStones(self, stones: List[List[int]]) -> int:
+        def dfs(x, y):
+            # Mark this stone as visited
+            visited.add((x, y))
+            for r, c in row_map[x] + col_map[y]:
+                if (r, c) not in visited:
+                    dfs(r, c)
+
+        row_map = {}
+        col_map = {}
+
+        for x, y in stones:
+            if x not in row_map:
+                row_map[x] = []
+            if y not in col_map:
+                col_map[y] = []
+            row_map[x].append((x, y))
+            col_map[y].append((x, y))
+        
+        visited = set()
+        components = 0
+        
+        for x, y in stones:
+            if (x, y) not in visited:
+                # Start a new DFS for a new component
+                dfs(x, y)
+                components += 1
+        
+        return len(stones) - components
