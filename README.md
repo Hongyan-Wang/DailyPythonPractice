@@ -1,5 +1,5 @@
 # DailyPythonPractice
-Daily Python practice by sovling one problem from [Leetcode](https://leetcode.com).
+Daily Python practice by sovling one problem from [Leetcode (Hongyan_Wang)](https://leetcode.com/u/Hongyan_Wang/)
 
 # Online Courses that I found useful to help me understand the key concepts
 
