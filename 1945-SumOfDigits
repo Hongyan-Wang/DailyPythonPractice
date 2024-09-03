@@ -1,0 +1,31 @@
+# https://leetcode.com/problems/sum-of-digits-of-string-after-convert/description/
+class Solution:
+    def getLucky(self, s: str, k: int) -> int:
+        def get_digits(num):
+            trans_digits = []
+            while num > 0:
+                trans_digits.append(num % 10)
+                num = num //10
+            trans_digits.reverse() 
+            return trans_digits
+
+        alphalist = 'abcdefghijklmnopqrstuvwxyz'
+        alpha_map = {}
+        i = 1
+        for letter in alphalist:
+            alpha_map[letter] = i
+            i += 1
+        transformed = []
+        for si in s:
+            if alpha_map[si] <=9:
+                transformed.append(alpha_map[si])
+            else:
+                transformed.extend([alpha_map[si]//10, alpha_map[si] % 10])
+        while k > 0:
+            sum_result = sum(transformed)
+            transformed = get_digits(sum_result)
+            k -= 1
+        return sum_result
+        
+
+
