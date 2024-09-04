@@ -1,0 +1,36 @@
+# https://leetcode.com/problems/walking-robot-simulation/description/
+
+## Note: need to convert list to set if need to check element exist each time. 
+
+class Solution:
+    def robotSim(self, commands: List[int], obstacles: List[List[int]]) -> int:
+        # Directions: North, East, South, West
+        directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]  # North, East, South, West
+        obstacle_set = set(map(tuple, obstacles))  # Store obstacles as a set of tuples for fast lookup
+        
+        x, y = 0, 0  # Starting position
+        direction_idx = 0  # Start facing north (index 0 in directions)
+        max_dist = 0  # Maximum distance from origin squared
+        
+        # Process each command
+        for command in commands:
+            if command == -1:
+                # Turn right
+                direction_idx = (direction_idx + 1) % 4
+            elif command == -2:
+                # Turn left
+                direction_idx = (direction_idx - 1) % 4
+            else:
+                # Move forward command units
+                dx, dy = directions[direction_idx]  # Get the current direction
+                for _ in range(command):
+                    if (x + dx, y + dy) not in obstacle_set:
+                        x += dx
+                        y += dy
+                        # Update the maximum distance squared
+                        max_dist = max(max_dist, x ** 2 + y ** 2)
+                    else:
+                        # Stop moving in this direction if an obstacle is encountered
+                        break
+        
+        return max_dist
