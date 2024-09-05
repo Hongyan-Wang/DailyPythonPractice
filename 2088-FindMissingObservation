@@ -1,0 +1,16 @@
+# 2028 - Find missing observation 
+# https://leetcode.com/problems/find-missing-observations/description/
+
+
+class Solution:
+    def missingRolls(self, rolls: List[int], mean: int, n: int) -> List[int]:
+        n_sum = (n + len(rolls)) * mean - sum(rolls)
+        if n_sum > n * 6 or n_sum < n:
+            return []
+        else:
+            aver = n_sum // n 
+            remain = n_sum % n
+            if remain == 0:
+                return [aver] * n 
+            else: 
+                return [aver] * (n-remain)+[aver+1]* remain
