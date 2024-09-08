@@ -1,0 +1,43 @@
+# https://leetcode.com/problems/split-linked-list-in-parts/description/
+
+
+
+
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def splitListToParts(self, head: Optional[ListNode], k: int) -> List[Optional[ListNode]]:
+        # Step 1: Calculate the length of the linked list
+        link_len = 0
+        current = head
+        while current:
+            link_len += 1
+            current = current.next
+
+        # Step 2: Determine the size of each part
+        seg = link_len // k
+        remain = link_len % k
+
+        # This will hold the sizes for each part
+        segment_lengths = [seg + 1 if i < remain else seg for i in range(k)]
+
+        # Step 3: Create the k parts
+        result = []
+        current = head
+
+        for length in segment_lengths:
+            if length == 0:
+                result.append(None)
+            else:
+                part_head = current
+                prev = None
+                for i in range(length):
+                    prev = current
+                    current = current.next
+                if prev:
+                    prev.next = None  # Cut the current part from the rest of the list
+                result.append(part_head)
+        return result
