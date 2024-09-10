@@ -1,0 +1,22 @@
+# https://leetcode.com/problems/insert-greatest-common-divisors-in-linked-list/description/
+
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def insertGreatestCommonDivisors(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        def Greatest_Common_divisor(a, b):
+            while b != 0:
+                a, b = b, a % b
+            return a
+        current = head
+        while current and current.next:
+            common_divisor = Greatest_Common_divisor(current.val, current.next.val)
+            new_next = ListNode(common_divisor)
+            new_next.next = current.next
+            current.next = new_next
+            current = new_next.next 
+        return head
+        
