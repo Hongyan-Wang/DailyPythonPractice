@@ -1,0 +1,52 @@
+# https://leetcode.com/problems/xor-queries-of-a-subarray/description/
+class Solution:
+    def xorQueries(self, arr: List[int], queries: List[List[int]]) -> List[int]:
+        # Step 1: Precompute the prefix XOR array
+        n = len(arr)
+        prefixXOR = [0] * (n + 1)  # prefixXOR[i] will store XOR of arr[0] to arr[i-1]
+        
+        for i in range(1, n + 1):
+            prefixXOR[i] = prefixXOR[i - 1] ^ arr[i - 1]
+        
+        # Step 2: Answer each query using the prefixXOR array
+        result = []
+        for left, right in queries:
+            # XOR of arr[left] to arr[right] is prefixXOR[right+1] ^ prefixXOR[left]
+            result.append(prefixXOR[right + 1] ^ prefixXOR[left])
+        
+        return result
+
+
+        '''    
+        def Num2Bin(num):
+            binarr = []
+            while num > 0:
+                binarr.append(num % 2)
+                num = num //2
+            return binarr 
+        def xor(alist):
+            if len(alist) == 1:
+                return alist[0]
+            temp = 0 if alist[0]== alist[1] else 1
+            for i in range(2, len(alist)):
+                 temp = 0 if alist[i]== temp else 1
+            return temp 
+        nummax = max(arr)
+        max_len = len(Num2Bin(nummax))
+        num_bins = []
+        for num in arr:
+            num_bin = Num2Bin(num) 
+            num_bins.append(num_bin + [0]*(max_len - len(num_bin)))
+        xor_results = []
+        for query in queries:
+            xor_result = 0
+            bit = 0
+            for j in range(max_len):
+                i_th_bins = []
+                for i in range(query[0], query[1]+1):
+                    i_th_bins.append(num_bins[i][j])
+                xor_result += (2 ** bit) * xor(i_th_bins) 
+                bit += 1
+            xor_results.append(xor_result)
+        return xor_results
+        '''
