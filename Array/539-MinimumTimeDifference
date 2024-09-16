@@ -1,0 +1,21 @@
+# https://leetcode.com/problems/minimum-time-difference/description/
+
+class Solution:
+    def findMinDifference(self, timePoints: List[str]) -> int:
+        def time2minutes(time_point):
+            hh, mm = int(time_point[0:2]), int(time_point[3::])
+            return hh * 60 + mm
+        time_list1 = []
+        for timepoint in timePoints:
+            time_list1.append(time2minutes(timepoint))
+        time_list1.sort()
+        time_list1.append(time_list1[0])
+        min_diff = float('inf')
+        for i in range(len(time_list1)-1):
+            temp = abs(time_list1[i+1] - time_list1[i])
+            temp = temp if temp <= 720 else 1440 - temp
+            min_diff = temp if temp <= min_diff else min_diff
+        return min_diff
+
+
+    
