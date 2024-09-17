@@ -1,0 +1,31 @@
+https://leetcode.com/problems/uncommon-words-from-two-sentences/description/
+
+class Solution:
+    def uncommonFromSentences(self, s1: str, s2: str) -> List[str]:
+        slist1 = s1.split(' ')
+        slist2 = s2.split(' ')
+        print(slist2)
+        def CountList(slist):
+            sset = {}
+            for word in slist:
+                if word not in sset:
+                    sset[word] = 1
+                else:
+                    sset[word] += 1
+            return sset
+        s1dic = CountList(slist1)
+        s2dic = CountList(slist2)
+        s1set = set(slist1)
+        s2set = set(slist2)
+        uniset1 = s1set - s1set.intersection(s2set)
+        uniset2 = s2set - s1set.intersection(s2set)
+        Output = []
+        for word in uniset1:
+            if s1dic[word] == 1:
+                Output.append(word)
+        for word in uniset2:
+            if s2dic[word] == 1:
+                Output.append(word)
+        return Output
+
+        
