@@ -1,0 +1,19 @@
+# https://leetcode.com/problems/find-the-difference/description
+# The usage of Counter function 
+
+from collections import Counter
+class Solution:
+    def findTheDifference(self, s: str, t: str) -> str:
+        scounter = Counter(s)
+        tcounter = Counter(t) 
+        for letter in tcounter:
+            if scounter[letter] != tcounter[letter]:
+                return letter
+## Another solution, to use the ord() and chr()
+
+class Solution:
+    def findTheDifference(self, s: str, t: str) -> str:
+        s_sum = sum(ord(x) for x in s)
+        t_sum = sum(ord(y) for y in t)
+    
+        return chr(t_sum - s_sum)
