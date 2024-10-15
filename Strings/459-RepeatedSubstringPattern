@@ -1,0 +1,9 @@
+
+https://leetcode.com/problems/repeated-substring-pattern/
+class Solution:
+    def repeatedSubstringPattern(self, s: str) -> bool:
+        return (s + s)[1:-1].find(s) != -1
+
+'''
+By repeating the string and removing the first and last character, if the original string is found in this new string, it implies that the original string consists of repeating units of some substring.
+'''
