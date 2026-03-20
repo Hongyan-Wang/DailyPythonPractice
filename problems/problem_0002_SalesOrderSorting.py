@@ -3,7 +3,7 @@ https://leetcode.com/discuss/post/4991818/microssoft-oa-by-anonymous_user-i0x0/
 
 A technology company announced that a new supply of P monitors would soon be available at their store, There
 were N orders (numbered from 0 to N-1) placed by customers who wanted to buy those monitors. The K-th order
-has to be delivered to a location at distance DIK] from the store and is for exactly CK] monitors.
+has to be delivered to a location at distance D[K] from the store and is for exactly C[K] monitors.
 
 Now the time has come for the monitors to be delivered. The orders will be fulfilled one by one. To minimize the
 shipping time, it has been decided that the deliveries will be made in order of increasing distance from the store.
