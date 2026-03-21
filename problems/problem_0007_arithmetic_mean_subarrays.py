@@ -39,39 +39,54 @@ which returns the number of contiguous fragments of A whose arithmetic means are
 import pytest
 
 def solution(A, S):
-    # We can use a prefix sum array to efficiently calculate the sum of any contiguous fragment.
-    # The arithmetic mean of a fragment A[i:j] is (prefix_sum[j] - prefix_sum[i]) / (j - i).
-    # We want this to equal S, which means prefix_sum[j] - prefix_sum[i] = S * (j - i).
-    # Rearranging gives prefix_sum[j] - S * j = prefix_sum[i] - S * i.
-    # This means we are looking for pairs of indices (i, j) such that prefix_sum[j] - S * j equals prefix_sum[i] - S * i.
+    """
+    Count contiguous subarrays of A whose arithmetic mean equals S.
 
-    from collections import defaultdict
+    Key insight — transform to zero-sum subarray counting:
+      Define B[k] = A[k] - S.
+      A subarray A[i..j] has mean S  iff  sum(A[i..j]) = S*(j-i+1)
+                                      iff  sum(B[i..j]) = 0.
+
+    Using prefix sums of B (prefix_B[k] = B[0]+...+B[k-1], with prefix_B[0] = 0):
+      sum(B[i..j]) = 0  iff  prefix_B[j+1] = prefix_B[i].
+
+    So the answer is the number of index pairs (i, j) with 0 ≤ i < j ≤ N
+    where prefix_B[i] = prefix_B[j].  A hash map lets us count these in O(N).
+
+    Time complexity:  O(N)
+    Space complexity: O(N)
+    """
 
     count = 0
-    prefix_sum = 0
-    seen = defaultdict(int)
-
-    for j in range(len(A)):
-        prefix_sum += A[j]
-        key = prefix_sum - S * (j + 1)
-        count += seen[key]
-        seen[prefix_sum - S * j] += 1
-
+    A_minus_S = []                # Running prefix sum of B; starts at prefix_B[0] = 0
+    current_sum = 0
+    current_sum_dict ={}
+    for a in A:
+        A_minus_S.append(a - S) 
+        current_sum += A_minus_S[-1]  
+        if current_sum == 0:
+            count += 1          
+        if current_sum in current_sum_dict: 
+            count += current_sum_dict[current_sum]
+            current_sum_dict[current_sum] += 1
+        else:
+            current_sum_dict[current_sum] = 1
         if count > 1_000_000_000:
             return 1_000_000_000
 
-    return count    
+    return count
+
 
 pytest_cases = [
-    ([2, 1, 3], 2, 3),
-    ([0, 4, 3, -1], 2, 2),
-    ([2, 1, 4], 3, 0),
-    ([1, 2, 3, 4], 2.5, 2),  # [1, 2, 3] and [2, 3, 4]
-    ([1, 1, 1, 1], 1, 10),  # All subarrays have mean 1
-    ([1, 2, 3, 4, 5], 3, 3),  # [3],
-    ([1, 2, 3, 4, 5], 4, 2),  # [4], [3, 4, 5]
-    ([1, 2, 3, 4, 5], 5, 1),  # [5]
-    ([1, -1, 1, -1], 0, 6),   # [1, -1], [-1, 1], [1, -1], [1, -1], [-1, 1], [-1, -1]
+    ([2, 1, 3], 2, 3),              # [2], [1,3], [2,1,3]
+    ([0, 4, 3, -1], 2, 2),          # [0,4], [4,3,-1]
+    ([2, 1, 4], 3, 0),              # no valid subarrays
+    ([1, 2, 3, 4], 2.5, 2),         # [2,3], [1,2,3,4]
+    ([1, 1, 1, 1], 1, 10),          # every subarray has mean 1 → C(5,2) = 10 pairs
+    ([1, 2, 3, 4, 5], 3, 3),        # [3], [2,3,4], [1,2,3,4,5]
+    ([1, 2, 3, 4, 5], 4, 2),        # [4], [3,4,5]
+    ([1, 2, 3, 4, 5], 5, 1),        # [5]
+    ([1, -1, 1, -1], 0, 4),         # [1,-1](0-1), [-1,1](1-2), [1,-1](2-3), [1,-1,1,-1](0-3)
 ]
 @pytest.mark.parametrize("A, S, expected", pytest_cases)
 def test_solution(A, S, expected):
