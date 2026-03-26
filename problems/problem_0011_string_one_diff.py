@@ -36,13 +36,38 @@ Write an **efficient** algorithm for the above assumptions.
 
 import pytest
 def solution(words):
-    # Placeholder for the actual implementation
+    # Analysis:
+
+    # Approach:
+    # 1. We can start with any string from the list (e.g., the
+    #    first one) as a candidate solution.
+    # 2. We check if this candidate differs from every string in the list by at
+    #    most one position. If it does, we can return it immediately.
+    # 3. If not, we can generate new candidate strings by changing each character
+    #    of the initial candidate to every possible lowercase letter and check
+    #    if any of those candidates satisfies the condition.
+    # 4. If we find a valid candidate, we return it. If we exhaust all possibilities without finding a valid candidate, we return an empty string.
+
+    # Time complexity: 
+    # function is_valid runs in O(N * K) in the worst case, where we compare the candidate string to each of the N strings in the list, and each comparison takes O(K) time.
+    # O(N) + O(K * 26 * N*K) = O(K^2 * N) in the worst case, where we check each of the K positions for 26 possible letters against all N words.
+    # 
+    # Space complexity: 
+    # O(K) for the candidate string, word0 and 
+    # O(N * K) for the input list of words.
+
+    # method to optimise:
+    
     def is_valid(candidate):
         for word in words:
-            diff_count = sum(1 for c1, c2 in zip(candidate, word) if c1 != c2)
+            diff_count = sum(c1 != c2 for c1, c2 in zip(candidate, word))
             if diff_count > 1:
                 return False
         return True
+    K= len(words[0])
+    for word in words:
+        if not word or len(word) != K:
+            return ""  # All words must be of the same length and non-empty
     word0 = words[0]
     if is_valid(word0):
         return word0
