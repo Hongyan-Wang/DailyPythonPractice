@@ -93,6 +93,20 @@ def solution(room, subtask):
     R = len(room)
     C = len(room[0])
 
+    # Approach:
+    # DFS-based pathfinding:
+    # 1. Start from the initial position of the robot.
+    # 2. Use a depth-first search (DFS) to explore all reachable cells,
+    #    marking visited cells to avoid cycles.
+    # 3. For each move, record the corresponding command and backtrack
+    #    with the reverse command to return to the previous cell.
+    # 4. This ensures we cover all reachable cells while generating a valid command sequence.
+    # 5. The DFS will naturally handle complex room shapes and obstacles.
+
+    # Time complexity: O(R*C) 
+    # Space complexity: O(R*C)
+
+
     # Find the starting position
     start_x = start_y = 0
     for i in range(R):
@@ -100,7 +114,11 @@ def solution(room, subtask):
             if room[i][j] == '*':
                 start_x, start_y = i, j
 
-    directions = [(0, 1, '>'), (0, -1, '<'), (1, 0, 'v'), (-1, 0, '^')]
+    #directions = [(0, 1, '>'), (0, -1, '<'), (1, 0, 'v'), (-1, 0, '^')]
+    directions = [(0, 1, '>'), 
+                  (1, 0, 'v'), 
+                  (0, -1, '<'), 
+                  (-1, 0, '^')]  # right, down, left, up
     reverse_cmd = {'>': '<', '<': '>', 'v': '^', '^': 'v'}
 
     visited = [[False] * C for _ in range(R)]

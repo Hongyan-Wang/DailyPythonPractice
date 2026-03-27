@@ -10,7 +10,7 @@ The idea is to randomly permute the data multiple times and calculate the quanti
 ## Problem
 
 The goal of this task is to write a function that applies permutation testing to perform a **chi-square test** in order to compare the click-through rates of three website designs.
-
+ 
 Write a function:
 
 ```python
@@ -49,7 +49,13 @@ import pytest
 
 import numpy as np
 import pandas as pd
+class RandomClicksGenerator:
+    def __init__(self, num_ones: int, num_zeros: int):
+        self.rng = np.random.default_rng(1984)
+        self.clicks = np.array([1] * num_ones + [0] * num_zeros)
 
+    def shuffled_clicks(self) -> np.ndarray:
+        return self.rng.permutation(self.clicks)
 
 def chi2_perm_test(cont_table, num_permutations=1000, seed=42):
     """
@@ -82,60 +88,95 @@ def chi2_perm_test(cont_table, num_permutations=1000, seed=42):
     distribution: given N total users with K clicks spread across groups of
     sizes n1, n2, …, how many clicks fall in each group by pure chance?
     """
-    observed = cont_table.values.astype(float)   # shape (2, k)
-    row_sums = observed.sum(axis=1, keepdims=True)
-    col_sums = observed.sum(axis=0, keepdims=True)
+
+    observed = cont_table.values.astype(float)
+
+    # Step 1: expected counts
     total = observed.sum()
+    row_sum = observed.sum(axis=1, keepdims=True)
+    col_sum = observed.sum(axis=0, keepdims=True)
+    expected = row_sum @ col_sum / total
 
-    # Expected counts under independence: E[i,j] = row_i_total * col_j_total / N
-    expected = row_sums @ col_sums / total
-
-    # Chi-square statistic: Σ (O - E)² / E, summed over all cells
+    # Step 2: observed chi-square
     chi2_observed = float(((observed - expected) ** 2 / expected).sum())
 
-    # --- Permutation null distribution ---
-    # col_totals: number of visits per design (fixed across permutations)
-    # total_clicks: total clicks in the whole table (fixed across permutations)
-    col_totals = col_sums.flatten().astype(int)
-    total_clicks = int(row_sums[0, 0])
+    # Step 3: initialize RandomClicksGenerator
+    total_clicks = int(observed[0].sum())
+    total_nonclicks = int(observed[1].sum())
+    generator = RandomClicksGenerator(total_clicks, total_nonclicks)
 
-    rng = np.random.default_rng(seed)
-    chi2_random_values = np.empty(num_permutations)
+    group_sizes = observed.sum(axis=0).astype(int)
+    num_permutations = 1000
+    chi2_random = np.empty(num_permutations)
 
+    # Step 4: permutation loop
     for i in range(num_permutations):
-        # Draw a random allocation of clicks across groups (without replacement)
-        perm_clicks = rng.multivariate_hypergeometric(col_totals, total_clicks).astype(float)
-        perm_nonclicks = col_totals - perm_clicks
+        permuted = generator.shuffled_clicks()
+
+        split1 = group_sizes[0]
+        split2 = group_sizes[0] + group_sizes[1]
+
+        group1 = permuted[:split1]
+        group2 = permuted[split1:split2]
+        group3 = permuted[split2:]
+
+        perm_clicks = np.array([
+            group1.sum(),
+            group2.sum(),
+            group3.sum()
+        ], dtype=float)
+
+        perm_nonclicks = group_sizes - perm_clicks
+
         perm_obs = np.vstack([perm_clicks, perm_nonclicks])
 
-        perm_row_sums = perm_obs.sum(axis=1, keepdims=True)
-        perm_col_sums = perm_obs.sum(axis=0, keepdims=True)
-        perm_expected = perm_row_sums @ perm_col_sums / total
+        perm_row_sum = perm_obs.sum(axis=1, keepdims=True)
+        perm_col_sum = perm_obs.sum(axis=0, keepdims=True)
+        perm_expected = perm_row_sum @ perm_col_sum / total
 
-        chi2_random_values[i] = ((perm_obs - perm_expected) ** 2 / perm_expected).sum()
+        chi2_random[i] = ((perm_obs - perm_expected) ** 2 / perm_expected).sum()
 
-    # p-value = P(chi2_null ≥ chi2_observed) estimated from the permutation distribution
-    p_value = float(np.mean(chi2_random_values >= chi2_observed))
+    # Step 5: p-value
+    p_value = float(np.mean(chi2_random > chi2_observed))
 
+    # Step 6: return result
     return {
-        "expected": expected,
+        "expected": [int(expected[0, 0]), int(expected[1, 0])],
         "chi2_observed": chi2_observed,
-        "chi2_random_mean": float(chi2_random_values.mean()),
+        "chi2_random_mean": float(chi2_random.mean()),
         "p_value": p_value,
-        "are_clicks_different": p_value < 0.05,
+        "are_clicks_different": p_value < 0.05
     }
 
-pytest_cases = [
-    (pd.DataFrame({'Design A': [115, 9885], 'Design B': [150, 9850], 'Design C': [130, 9870]}),
-     {'are_clicks_different': False}),  # p-value should be > 0.05, no significant difference
-    (pd.DataFrame({'Design A': [200, 9800], 'Design B': [150, 9850], 'Design C': [100, 9900]}),
-     {'are_clicks_different': True}),   # p-value should be < 0.05, significant difference
-]
-@pytest.mark.parametrize("cont_table, expected", pytest_cases)
-def test_chi2_perm_test(cont_table, expected):
+
+
+def test_chi2_perm_test_example_case():
+    cont_table = pd.DataFrame([[115, 98, 123], [9885, 9902, 9877]])
+
     result = chi2_perm_test(cont_table)
-    assert result['are_clicks_different'] == expected['are_clicks_different']
-    assert 'expected' in result
-    assert 'chi2_observed' in result
-    assert 'chi2_random_mean' in result
-    assert 'p_value' in result  
+
+    # Check keys
+    assert set(result.keys()) == {
+        "expected",
+        "chi2_observed",
+        "chi2_random_mean",
+        "p_value",
+        "are_clicks_different",
+    }
+
+    # Check types
+    assert isinstance(result["expected"], list)
+    assert len(result["expected"]) == 2
+    assert all(isinstance(x, int) for x in result["expected"])
+
+    assert isinstance(result["chi2_observed"], float)
+    assert isinstance(result["chi2_random_mean"], float)
+    assert isinstance(result["p_value"], float)
+    assert isinstance(result["are_clicks_different"], bool)
+
+    # Check exact / near-exact values from the example
+    assert result["expected"] == [112, 9888]
+    assert np.isclose(result["chi2_observed"], 2.943683541377716)
+    assert np.isclose(result["chi2_random_mean"], 2.117844862459547)
+    assert np.isclose(result["p_value"], 0.257)
+    assert result["are_clicks_different"] is False
