@@ -1,5 +1,5 @@
 """
-# Task 6 — Permutation Chi-Square Test
+# Permutation Chi-Square Test
 
 ## Background
 
